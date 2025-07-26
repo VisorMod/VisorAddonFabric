@@ -1,6 +1,9 @@
 
 
 [versions]
+#Gradle Addons
+shadow              = "8.1.1"
+fabricLoom          = "1.10-SNAPSHOT"
 
 #Annotations
 lombok                 = "1.18.30"
@@ -8,29 +11,24 @@ jetbrains              = "23.0.0"
 
 #Core
 minecraftVersion       = "1.20.1"
-visorApi               = "0.0.3"
 
 #Fabric
 fabric_loader          = "0.16.5"
-fabric_api             = "0.92.3"
-mixinExtras            = "0.4.1"
 yarnMappings           = "1.20.1+build.8"
 
+[plugins]
+shadow            = { id = "com.github.johnrengelman.shadow",  version.ref = "shadow" }
+fabricLoom        = { id = "fabric-loom",  version.ref = "fabricLoom" }
+
+
 [libraries]
-
 # Annotations
-lombok           = { module = "org.projectlombok:lombok",           version.ref = "lombok" }
-jetbrains        = { module = "org.jetbrains:annotations",         version.ref = "jetbrains" }
-
+lombok        = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+jetbrains     = { module = "org.jetbrains:annotations", version.ref = "jetbrains" }
 
 # Mod loaders
-fabric-loader      = { module = "net.fabricmc:fabric-loader",        version.ref = "fabric_loader" }
+fabric-loader     = { module = "net.fabricmc:fabric-loader", version.ref = "fabric_loader" }
 
 [bundles]
-annotations        = [ "lombok", "jetbrains" ]
+annotations     = [ "lombok", "jetbrains" ]
 
-
-
-[plugins]
-loom                 = { id = "dev.architectury.loom",          version = "1.5-SNAPSHOT" }
-shadow               = { id = "com.github.johnrengelman.shadow",  version = "7.1.2" }

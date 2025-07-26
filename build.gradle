@@ -1,7 +1,7 @@
 plugins {
     id 'java'
-    id "fabric-loom" version "1.10-SNAPSHOT"
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    alias(libs.plugins.fabricLoom)
+    alias(libs.plugins.shadow)
 }
 
 group = 'me.phoenixra'
@@ -13,7 +13,6 @@ repositories {
         url = 'https://maven.fabricmc.net/'
     }
     maven { url 'https://jitpack.io' }
-    maven { url 'https://redempt.dev' }
     mavenCentral()
     gradlePluginPortal()
 }
@@ -25,14 +24,12 @@ dependencies {
     modImplementation(libs.fabric.loader)
 
 
-    //modApi("com.github.Phoenix-Ra:Visor:0.0.10")
     modImplementation fileTree(dir: 'libs', include: '*.jar')
 
     compileOnly(libs.bundles.annotations)
     annotationProcessor(libs.bundles.annotations)
 }
 
-// Create a resolvable config for shading only implementation deps
 configurations {
     shade {
         canBeResolved = true
@@ -41,26 +38,15 @@ configurations {
     }
 }
 
-// Shade only the AtumConfiguration libs into a small dev jar
 shadowJar {
-    // pull only from our 'shade' config
     configurations = [ project.configurations.shade ]
-    // classifier so this jar is input to remapJar, not final
-    archiveClassifier.set('dev-shadow')
-
-    // relocate any dependencies AtumConfiguration ships
-    relocate 'org.yaml.snakeyaml',  'me.phoenixra.libs.org.yaml.snakeyaml'
-    relocate 'com.google.gson',     'me.phoenixra.libs.com.google.gson'
-    relocate 'redempt.crunch',   'me.phoenixra.libs.redempt.crunch'
-    relocate 'me.phoenixra.atumconfig',   'me.phoenixra.libs.me.phoenixra.atumconfig'
-
+    archiveClassifier.set('dev')
 }
 
 
 
 // ----- REMAP SHADOW JAR & ACCESS-WIDENER REMAPPING -----
 
-// Have Loom remap the shadowJar output (including accessWidener) into the final obf jar
 tasks.named('remapJar') {
     dependsOn shadowJar
     inputFile.set(shadowJar.archiveFile)
@@ -71,11 +57,6 @@ tasks.build {
     dependsOn tasks.named('remapJar')
 }
 
-compileJava {
-
-    dependsOn clean
-}
-
 tasks.processResources {
     inputs.property 'version', project.version
     filesMatching("fabric.mod.json") {
@@ -83,8 +64,11 @@ tasks.processResources {
     }
 }
 
+compileJava {
+    dependsOn clean
+}
+
 java {
-    // Generate sources jar; Loom wires it into remapSourcesJar automatically
     withSourcesJar()
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
