@@ -13,6 +13,13 @@ repositories {
         url = 'https://maven.fabricmc.net/'
     }
     maven { url 'https://jitpack.io' }
+
+    maven { url "https://maven.fabricmc.net/" }
+    maven { url "https://maven.architectury.dev/" }
+    maven { url "https://libraries.minecraft.net/" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    maven { url = "https://maven.parchmentmc.org" }
+
     mavenCentral()
     gradlePluginPortal()
 }
@@ -24,12 +31,12 @@ dependencies {
     modImplementation(libs.fabric.loader)
 
 
-    modImplementation fileTree(dir: 'libs', include: '*.jar')
+    modApi("com.github.VisorMod.Visor:fabric:0.1.0-pre16")
+
 
     compileOnly(libs.bundles.annotations)
     annotationProcessor(libs.bundles.annotations)
 }
-
 configurations {
     shade {
         canBeResolved = true
